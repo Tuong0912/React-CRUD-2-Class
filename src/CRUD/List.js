@@ -5,6 +5,8 @@ import {Link, useNavigate} from "react-router-dom";
 export default function ListProduct() {
     const [product, setProduct] = useState([])
     console.log(product)
+    const [searchTerm, setSearchTerm] = useState("");
+    const [searchResults, setSearchResults] = useState([]);
 
     let navigate = useNavigate()
 
@@ -35,6 +37,21 @@ export default function ListProduct() {
                     });
             });
     };
+
+    const handleChange = (event) => {
+        setSearchTerm(event.target.value);
+    };
+
+    const handleSubmit = (event) => {
+        event.preventDefault();
+        const results = product.filter((item) =>
+            item.name.toLowerCase().includes(searchTerm.toLowerCase())
+        );
+        setSearchResults(results);
+    };
+
+
+
     return (
         <>
             <table>
@@ -74,6 +91,20 @@ export default function ListProduct() {
                     <td><Link to={"/create"}>Create</Link></td>
                 </tr>
             </table>
+
+
+
+            <div>
+                <form onSubmit={handleSubmit}>
+                    <input type="text" value={searchTerm} onChange={handleChange}/>
+                    <button type="submit">Search</button>
+                </form>
+                <ul>
+                    {searchResults.map((item) => (
+                        <li key={item.id}>{item.name}</li>
+                    ))}
+                </ul>
+            </div>
         </>
     )
 }
