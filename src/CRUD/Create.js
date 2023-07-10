@@ -11,7 +11,9 @@ export default function CreateProduct() {
         name: "",
         price: '',
         number: '',
-        category: 0
+        category: {
+            id: ''
+        }
     });
     useEffect(() => {
         axios.get('http://localhost:8080/cate').then((response) => {
