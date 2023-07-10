@@ -10,6 +10,7 @@ export default function Detail() {
             <h1>{state.detail.name}</h1>
             <h1>{state.detail.price}</h1>
             <h1>{state.detail.number}</h1>
+            <h1>{state.detail.category.name}</h1>
 
         </>
     )
