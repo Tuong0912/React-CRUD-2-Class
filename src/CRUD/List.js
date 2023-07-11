@@ -6,7 +6,6 @@ export default function ListProduct() {
     const [product, setProduct] = useState([])
     console.log(product)
     const [searchTerm, setSearchTerm] = useState("");
-    const [searchResults, setSearchResults] = useState([]);
 
     let navigate = useNavigate()
 
@@ -47,9 +46,8 @@ export default function ListProduct() {
         const results = product.filter((item) =>
             item.name.toLowerCase().includes(searchTerm.toLowerCase())
         );
-        setSearchResults(results);
+        setProduct(results);
     };
-
 
 
     return (
@@ -93,17 +91,11 @@ export default function ListProduct() {
             </table>
 
 
-
             <div>
                 <form onSubmit={handleSubmit}>
                     <input type="text" value={searchTerm} onChange={handleChange}/>
                     <button type="submit">Search</button>
                 </form>
-                <ul>
-                    {searchResults.map((item) => (
-                        <li key={item.id}>{item.name}</li>
-                    ))}
-                </ul>
             </div>
         </>
     )
