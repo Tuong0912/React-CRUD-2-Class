@@ -1,13 +1,11 @@
 import {useEffect, useState} from "react";
 import {Link, useNavigate} from "react-router-dom";
 import axios from "axios";
-import Navbar from "./FindByCloseName";
 
 export default function List() {
     const [product, setProduct] = useState([])
     const navigate = useNavigate()
     const [search, setSearch] = useState('')
-
 
     useEffect(() => {
         axios.get('http://localhost:8080/product').then((response) => {
@@ -15,10 +13,8 @@ export default function List() {
         })
     }, [])
 
-
     const handleDetailProduct = (id) => {
-        axios.patch('http://localhost:8080/product/' + id).then(
-            (response) => {
+        axios.patch('http://localhost:8080/product/' + id).then((response) => {
                 const detailProduct = response.data
                 console.log(detailProduct)
                 navigate('detail/' + id, {
@@ -28,7 +24,6 @@ export default function List() {
                 });
             });
     };
-
     const handleDeleteProduct = (id) => {
         axios.delete('http://localhost:8080/product/' + id).then(() => {
             setProduct(product.filter(elm => elm.id !== id))
@@ -36,13 +31,6 @@ export default function List() {
 
     }
 
-
-    function inputSearch(input) {
-        console.log(input);
-        if (input !== undefined) {
-            setSearch(input)
-        }
-    }
 
     useEffect(() => {
             axios
@@ -58,12 +46,14 @@ export default function List() {
                 });
 
         }
-        , [product, search])
+        , [ search])
 
 
     return (
         <>
-            <Navbar search={inputSearch}/>
+            <input type={"text"} value={search} onChange={(e) => {
+                setSearch(e.target.value)
+            }}/>
             <Link to={'/createProduct'}>Create</Link>
             <table border={1}>
                 <tbody>
