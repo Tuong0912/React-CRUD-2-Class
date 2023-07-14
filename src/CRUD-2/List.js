@@ -1,92 +1,98 @@
-import {useEffect, useState} from "react";
-import {Link, useNavigate} from "react-router-dom";
+import React, {useEffect, useState} from "react";
 import axios from "axios";
+import "./List.css";
+import {Link, useNavigate} from "react-router-dom";
+import Swal from "sweetalert2";
 
 export default function List() {
-    const [product, setProduct] = useState([])
-    const navigate = useNavigate()
-    const [search, setSearch] = useState('')
-
+    const [tour, setTour] = useState([]);
+    const navigate = useNavigate();
+    console.log(tour)
     useEffect(() => {
-        axios.get('http://localhost:8080/product').then((response) => {
-            setProduct(response.data)
-        })
-    }, [])
+        axios.get("http://localhost:3000/tuors").then((response) => {
+            setTour(response.data);
+        });
+    }, []);
 
     const handleDetailProduct = (id) => {
-        axios.patch('http://localhost:8080/product/' + id).then((response) => {
-                const detailProduct = response.data
-                console.log(detailProduct)
-                navigate('detail/' + id, {
-                    state: {
-                        detailProduct
+        axios.get("http://localhost:3000/tuors/" + id).then((response) => {
+            const detail = response.data;
+            navigate("/detail/" + id, {
+                state: {
+                    detail,
+                },
+            });
+        });
+    };
+
+    const handleDeleteTours = (id) => {
+        Swal.fire({
+            title: "Are you sure?",
+            text: "You won't be able to revert this!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes, delete it!",
+        }).then((result) => {
+            if (result.isConfirmed) {
+                axios.delete("http://localhost:3000/tuors/" + id).then((response) => {
+                    console.log(response);
+                    Swal.fire({
+                        position: "center",
+                        icon: "success",
+                        title: "Your file has been deleted.",
+                        showConfirmButton: false,
+                        timer: 1500,
+                    });
+                    if (response.status === 200) {
+                        setTour(tour.filter((s) => s.id !== id));
                     }
                 });
-            });
+            }
+        });
     };
-    const handleDeleteProduct = (id) => {
-        axios.delete('http://localhost:8080/product/' + id).then(() => {
-            setProduct(product.filter(elm => elm.id !== id))
-        })
-
-    }
-
-
-    useEffect(() => {
-            axios
-                .get(`http://localhost:8080/product/findByName?name=${search}`)
-                .then((response) => {
-                    const data = response.data
-                    console.log(">>>>>>>DATA: ", data)
-                    setProduct(data)
-                    console.log(">>>>>>>LIST: ", product)
-                })
-                .catch((error) => {
-                    console.log(error);
-                });
-
-        }
-        , [ search])
-
-
     return (
-        <>
-            <input type={"text"} value={search} onChange={(e) => {
-                setSearch(e.target.value)
-            }}/>
-            <Link to={'/createProduct'}>Create</Link>
-            <table border={1}>
-                <tbody>
+        <div className="product-list-container">
+            <Link to={"/createTours"}>Create</Link>
+            <table className="product-table">
+                <thead>
                 <tr>
-                    <td>ID</td>
-                    <td>Name</td>
-                    <td>Price</td>
-                    <td>Number</td>
-                    <td>Category</td>
-                    <td colSpan={2} style={{textAlign: "center"}}>Function</td>
+                    <th>ID</th>
+                    <th>Title</th>
+                    <th>Price</th>
+                    <th>Description</th>
+                    <th colSpan={2}>Actions</th>
                 </tr>
-                {product.map((item) => (
-                    <tr style={{textAlign: "center"}}>
+                </thead>
+                <tbody>
+                {tour.map((item) => (
+                    <tr key={item.id}>
                         <td>{item.id}</td>
-                        <td>{item.name}</td>
+                        <td>{item.title}</td>
                         <td>{item.price}</td>
-                        <td>{item.number}</td>
-                        <td>{item.category.name}</td>
-                        <td>
-                            <button onClick={() => handleDeleteProduct(item.id)}>Delete</button>
-                        </td>
-                        <td>
-                            <button onClick={() => handleDetailProduct(item.id)}>Detail</button>
-                        </td>
-                        <td>
-                            <Link to={'updateProduct/' + item.id}>
-                                <button>Update</button>
+                        <td>{item.description}</td>
+                        <td colSpan={2} className="action-cell">
+                            <button
+                                className="btn-delete"
+                                onClick={() => handleDeleteTours(item.id)}
+                            >
+                                Delete
+                            </button>
+                            <button
+                                className="btn-detail"
+                                onClick={() => handleDetailProduct(item.id)}
+                            >
+                                Detail
+                            </button>
+                            <Link to={'/updateTour/' + item.id}>
+                                <button className="btn-update">Update</button>
                             </Link>
                         </td>
                     </tr>
                 ))}
                 </tbody>
             </table>
-        </>
-    )
+        </div>
+    );
 }

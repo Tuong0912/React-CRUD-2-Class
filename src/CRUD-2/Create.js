@@ -1,82 +1,82 @@
-import {useNavigate} from "react-router-dom";
-import {useEffect, useState} from "react";
+import {Link, useNavigate} from "react-router-dom";
+import {useState} from "react";
 import axios from "axios";
-import {Field, Form, Formik} from "formik";
+import {ErrorMessage, Field, Form, Formik} from "formik";
+import * as Yup from "yup";
+import "./List.css";
 
 export default function Create() {
-    const navigate = useNavigate()
-    const [category, setCategory] = useState([])
-    const [product, setProduct] = useState({
-        id: '',
-        name: '',
-        price: '',
-        number: '',
-        category: {
-            id: ''
-        }
+    const navigate = useNavigate();
+    const [tours] = useState({
+        id: "",
+        title: "",
+        price: "",
+        description: ""
     });
 
-    useEffect(() => {
-        axios.get("http://localhost:8080/cate").then((response) => {
-            setCategory(response.data)
-        })
-    }, [])
 
     const handleForSubmit = (values) => {
-        const saveProduct = {
-            ...values, category: {
-                id: values.category
-            }
-        };
-        axios.post('http://localhost:8080/product', saveProduct).then(() => {
-            console.log(values)
-            navigate('/')
-        })
-    }
+        axios.post("http://localhost:3000/tuors", values).then(() => {
+            console.log(values);
+            navigate("/tours");
+        });
+    };
+
+
     return (
-        <>
+        <div className="product-list-container">
+            <div className="product-list-header">
+                <h1>Create Product</h1>
+            </div>
             <Formik
-                initialValues={product}
+                initialValues={{
+                    id: "",
+                    title: "",
+                    price: "",
+                    description: ""
+                }}
                 onSubmit={handleForSubmit}
             >
                 <Form>
-                    <table>
+                    <table className="product-table">
+                        <thead className="product-table-header">
+                        <tr>
+
+                            <th>Tille</th>
+                            <th>Price</th>
+                            <th>Description</th>
+                        </tr>
+                        </thead>
                         <tbody>
-                        <tr>
-                            <td>Name</td>
-                            <td><Field type={"text"} name={'name'}/></td>
-                        </tr>
-                        <tr>
-                            <td>Price</td>
-                            <td><Field type={"text"} name={'price'}/></td>
-                        </tr>
-                        <tr>
-                            <td>Number</td>
-                            <td><Field type={"text"} name={'number'}/></td>
-                        </tr>
-                        <tr>
-                            <td>Category</td>
-                            <td>
-                                <Field as="select" name={'category'}>
-                                    <option>Choose your Category</option>
-                                    {category.map((item) => {
-                                        return (
-                                            <option value={item.id}>{item.name}</option>
-                                        )
-                                    })}
-                                </Field>
+                        <tr className="product-table-row">
+                            <td className="product-table-cell">
+                                <Field type="text" name="title"/>
+                                <ErrorMessage name="title" component="div"/>
                             </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <button>Save</button>
+                            <td className="product-table-cell">
+                                <Field type="text" name="price"/>
+                                <ErrorMessage name="price" component="div"/>
+                            </td>
+                            <td className="product-table-cell">
+                                <Field type="text" name="description"/>
+                                <ErrorMessage name="description" component="div"/>
                             </td>
                         </tr>
                         </tbody>
+                        <tr className="product-table-row">
+                            <td className="product-table-cell">
+                                <button type="submit" className="btn-create">
+                                    Save
+                                </button>
+
+                                <Link to="/tours" className="">
+                                    <button className="btn-create">Back to List</button>
+                                </Link>
+                            </td>
+                        </tr>
                     </table>
                 </Form>
             </Formik>
-
-        </>
-    )
+        </div>
+    );
 }

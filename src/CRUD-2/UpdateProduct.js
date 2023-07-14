@@ -2,83 +2,74 @@ import {Link, useNavigate, useParams} from "react-router-dom";
 import {useEffect, useState} from "react";
 import axios from "axios";
 import {Field, Form, Formik} from "formik";
+import "./List.css"; // Import CSS file for styling
 
 export default function UpdateProduct() {
-    const {id} = useParams()
-    const navigate = useNavigate()
-    const [category, setCategory] = useState([])
-    console.log(category)
-    const [product, setProduct] = useState({})
-
-
+    const {id} = useParams();
+    const navigate = useNavigate();
+    const [tours, setTours] = useState({});
 
     useEffect(() => {
-        axios.patch('http://localhost:8080/product/' + id).then((response) => {
-            setProduct(response.data)
-            console.log(product)
-        })
-    }, [id, product])
-
-    useEffect(() => {
-        axios.get('http://localhost:8080/cate').then((response) => {
-            setCategory(response.data)
-            console.log(category)
-        })
-    }, [category])
+        axios.get('http://localhost:3000/tuors/' + id).then((response) => {
+            setTours(response.data);
+            console.log(tours)
+        });
+    }, [id]);
 
     const handleFormUpdate = (values) => {
-        axios.put('http://localhost:8080/product/' + id, values)
-            .then(() => {
-            navigate('/')
-        })
-    }
+        axios.put('http://localhost:3000/tuors/' + id, values).then(() => {
+            navigate("/");
+        });
+    };
 
     return (
-        <>
-            <Formik initialValues={product}
-                    onSubmit={handleFormUpdate}
-                    enableReinitialize={true}>
-                
-                <Form>
-                    <table>
+        <div className="product-list-container">
+            <Formik
+                initialValues={tours}
+                onSubmit={handleFormUpdate}
+                enableReinitialize={true}
+            >
+                <Form className="product-form">
+                    <table className="product-table">
                         <tbody>
-                        <tr>
-                            <td>ID</td>
-                            <td><Field name={"id"}/></td>
-                        </tr>
-                        <tr>
-                            <td>Name</td>
-                            <td><Field name={"name"}/></td>
-                        </tr>
-                        <tr>
-                            <td>Price</td>
-                            <td><Field name={"price"}/></td>
-                        </tr>
-                        <tr>
-                            <td>Number</td>
-                            <td><Field name={"number"}/></td>
-                        </tr>
-                        <tr>
-                            <td>Category</td>
-                            <td>
-                                <Field as={'select'} name={"category.id"}>
-                                    <option>Select Category</option>
-                                    {category.map((item) => (
-                                        <option value={item.id}>{item.name}</option>
-                                    ))}
-                                </Field>
+                        <tr className="product-table-row">
+                            <td className="product-table-cell">ID</td>
+                            <td className="product-table-cell">
+                                <Field name="id" className="form-control" disabled/>
                             </td>
                         </tr>
-                        <tr>
-                            <button>Save</button>
-                            <Link to={'/'}>Back to List</Link>
+                        <tr className="product-table-row">
+                            <td className="product-table-cell">Title</td>
+                            <td className="product-table-cell">
+                                <Field name="title" className="form-control"/>
+                            </td>
+                        </tr>
+                        <tr className="product-table-row">
+                            <td className="product-table-cell">Price</td>
+                            <td className="product-table-cell">
+                                <Field name="price" className="form-control"/>
+                            </td>
+                        </tr>
+                        <tr className="product-table-row">
+                            <td className="product-table-cell">Description</td>
+                            <td className="product-table-cell">
+                                <Field name="description" className="form-control"/>
+                            </td>
+                        </tr>
+                        <tr className="product-table-row">
+                            <td className="product-table-cell" colSpan={2}>
+                                <button type="submit" className="btn-update">
+                                    Save
+                                </button>
+                                <Link to="/tours" className="btn-back">
+                                    <button className="btn-update">Back to List</button>
+                                </Link>
+                            </td>
                         </tr>
                         </tbody>
                     </table>
                 </Form>
             </Formik>
-        </>
-    )
-
-
+        </div>
+    );
 }

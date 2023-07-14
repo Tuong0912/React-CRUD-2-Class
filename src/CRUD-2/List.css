@@ -1,0 +1,102 @@
+/* List.css */
+
+.product-list-container {
+    margin: 20px;
+}
+
+.product-list-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.product-list-header h1 {
+    font-size: 24px;
+    margin-right: 20px;
+}
+
+.product-list-header input[type="text"] {
+    padding: 5px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+}
+
+.btn-create {
+    padding: 10px 20px;
+    background-color: #4caf50;
+    color: white;
+    text-decoration: none;
+    border-radius: 4px;
+}
+
+.product-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.product-table th {
+    background-color: #f2f2f2;
+    padding: 10px;
+    text-align: left;
+}
+
+.product-table td {
+    padding: 10px;
+    text-align: left;
+}
+
+.btn-delete {
+    padding: 5px 10px;
+    background-color: #ff5f5f;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-delete:hover {
+    background-color: #ff4343;
+}
+
+.btn-detail {
+    padding: 5px 10px;
+    background-color: #4caf50;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-detail:hover {
+    background-color: #45a049;
+}
+
+.product-table tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.product-table tr:hover {
+    background-color: #ebebeb;
+}
+.btn-update {
+    padding: 5px 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-update:hover {
+    background-color: #0056b3;
+}
+.action-cell {
+    text-align: center;
+}
+
+.action-cell button {
+    margin-right: 5px;
+}
+.input-container {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+}
